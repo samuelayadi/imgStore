@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BsFillEnvelopeFill, BsPersonRolodex } from "react-icons/bs";
 import { BiSolidLockAlt } from "react-icons/bi";
+import { MdCancel } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -10,7 +11,11 @@ const SignupForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState("");
+  const [errorStatus, setErrorStatus] = useState(false);
 
+
+  // Function to Handle Signup
   const Signup = (e) => {
     setIsLoading(true);
     e.preventDefault();
@@ -18,11 +23,12 @@ const SignupForm = () => {
       .then((userCredential) => {
         console.log(userCredential);
         setIsLoading(false);
-        navigate("/");
+        navigate("/gallery");
       })
       .catch((err) => {
-        console.log(err);
+        setErrorMessage(err.message);
         setIsLoading(false);
+        setErrorStatus(true);
       });
   };
 
@@ -37,9 +43,8 @@ const SignupForm = () => {
         onSubmit={Signup}
       >
         <p className="text-2xl w-full">
-          <span className="text-3xl text-secondary">W</span>elcome Aboard
+          <span className="text-3xl text-secondary">C</span>reate Account
         </p>
-
 
         <fieldset className="flex items-center">
           <label
@@ -87,15 +92,22 @@ const SignupForm = () => {
         </button>
         <p className="text-lg">
           Already have an account?{" "}
-          <Link className="text-primary" to="/">
+          <Link className="text-primary" to="/login">
             Login
           </Link>
         </p>
+
+        {errorStatus && (
+          <p className="flex items-center">
+            <span className="text-2xl text-[red] pr-3">
+              <MdCancel />
+            </span>
+            {errorMessage}
+          </p>
+        )}
       </form>
     </div>
   );
 };
 
 export default SignupForm;
-
-

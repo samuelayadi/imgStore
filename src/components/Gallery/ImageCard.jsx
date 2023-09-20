@@ -88,7 +88,6 @@ const ImageCard = ({ search }) => {
     setImages(updatedImages);
   };
 
-  console.log(images);
 
   return (
     <>

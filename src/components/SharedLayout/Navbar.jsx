@@ -15,7 +15,7 @@ const Navbar = () => {
         </Link>
         <div className="flex items-center space-x-3">
           {!isGallery &&(
-            <NavLink to="login" className="px-8 py-1 bg-primary rounded-lg">
+            <NavLink to="/login" className="px-8 py-1 bg-primary rounded-lg">
               Upload
             </NavLink>
           )}

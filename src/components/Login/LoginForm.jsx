@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { BsFillEnvelopeFill } from "react-icons/bs";
 import { BiSolidLockAlt } from "react-icons/bi";
+import { MdCancel } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
-import {auth} from "../../firebase/firebase"
+import { auth } from "../../firebase/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 const LoginForm = () => {
@@ -10,18 +11,23 @@ const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState([]);
+  const [errorStatus, setErrorStatus] = useState(false);
+ 
 
+  // Function to Handle Login
   const LogIn = (e) => {
     e.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         console.log(userCredential);
         setIsLoading(false);
-        navigate("/gallery")
+        navigate("/gallery");
       })
       .catch((err) => {
-        console.log(err);
+        setErrorMessage(err.message);
         setIsLoading(false);
+        setErrorStatus(true);
       });
   };
 
@@ -84,10 +90,19 @@ const LoginForm = () => {
         </button>
         <p className="text-lg">
           Don't have an account?{" "}
-          <Link className="text-primary" to="signup">
+          <Link className="text-primary" to="/signup">
             SignUp
           </Link>
         </p>
+
+        {errorStatus && (
+          <p className="flex items-center">
+            <span className="text-2xl text-[red] pr-3">
+              <MdCancel />
+            </span>
+            {errorMessage}
+          </p>
+        )}
       </form>
     </div>
   );

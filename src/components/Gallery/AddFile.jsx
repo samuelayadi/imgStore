@@ -40,24 +40,17 @@ const AddFile = () => {
               onChange={handleFileChange}
               className="text-md text-white relative w-64 file:py-5 file:mr-5 file:px-4 file:rounded-lg file:border-0 file:text-md file:bg-secondary file:text-white hover:file:scale-95"
             />
-              <p className="text-md">Or</p>
-              <p className="text-md">Drag and Drop Image</p>
+            <p className="text-md">Or</p>
+            <p className="text-md">Drag and Drop Image</p>
           </label>
-          <button className="gradient-border px-10 py-2 hover:bg-gradient-to-r hover:from-secondary hover:to-primary" onClick={handleUpload}>
+          <button
+            className="gradient-border px-10 py-2 hover:bg-gradient-to-r hover:from-secondary hover:to-primary"
+            onClick={handleUpload}
+          >
             Upload
           </button>
         </div>
       </div>
-      {/* {selectedFile && (
-          <div className="selected-file-preview">
-            <p>Selected File: {selectedFile.name}</p>
-            <img
-              src={URL.createObjectURL(selectedFile)}
-              alt="Selected File Preview"
-              className=""
-            />
-          </div>
-        )} */}
     </div>
   );
 };

@@ -11,7 +11,6 @@ const Home = () => {
     const [iterations, setIterations] = useState(0);
 
     const handleAnimationLooped = () => {
-      // Update the number of iterations
       setIterations((prevIterations) => prevIterations + 1);
     };
 
