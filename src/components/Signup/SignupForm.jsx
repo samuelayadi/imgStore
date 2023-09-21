@@ -92,7 +92,7 @@ const SignupForm = () => {
         </button>
         <p className="text-lg">
           Already have an account?{" "}
-          <Link className="text-primary" to="/login">
+          <Link className="text-primary" to="/">
             Login
           </Link>
         </p>

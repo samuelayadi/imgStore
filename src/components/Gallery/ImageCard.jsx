@@ -7,7 +7,7 @@ const ImageCard = ({ search }) => {
   const [isLoading, setIsLoading] = useState(true);
   const apiKey = "LdmawpiugbPaHgUah1ugD1YI9rSfyohIL4lbyXTP9nVtfiOV3SkEFh5k";
   const apiUrl = "https://api.pexels.com/v1/search";
-  const isGallery = useLocation().pathname === "/gallery"; // use useLocation to get the current pathname
+  const isGallery = useLocation().pathname === "/gallery";
 
   useEffect(() => {
     const axiosConfig = {
@@ -37,15 +37,12 @@ const ImageCard = ({ search }) => {
     };
 
     if (search === "") {
-      // Fetch default images
       fetchImages("all");
     } else {
-      // Fetch images based on the search query
       fetchImages(search);
     }
 
     if (isGallery) {
-      // Fetch gallery images
       fetchImages("all");
     }
   }, [search, isGallery]);
