@@ -4,10 +4,10 @@ import axios from "axios";
 
 const ImageCard = ({ search }) => {
   const [images, setImages] = useState([]);
-  const [isLoading, setIsLoading]= useState(true)
+  const [isLoading, setIsLoading] = useState(true);
   const apiKey = "LdmawpiugbPaHgUah1ugD1YI9rSfyohIL4lbyXTP9nVtfiOV3SkEFh5k";
   const apiUrl = "https://api.pexels.com/v1/search";
-  const isGallery = location.pathname === "/gallery";
+  const isGallery = useLocation().pathname === "/gallery"; // use useLocation to get the current pathname
 
   useEffect(() => {
     const axiosConfig = {
@@ -16,31 +16,12 @@ const ImageCard = ({ search }) => {
       },
     };
 
-    if (search === "") {
+    // Function to fetch images based on the query
+    const fetchImages = (query) => {
       axios
         .get(apiUrl, {
           params: {
-            query: "all",
-          },
-          headers: axiosConfig.headers,
-        })
-        .then((response) => {
-          const photos = response.data.photos;
-          setImages(photos);
-          setIsLoading(false)
-        })
-        .catch((error) => {
-          setIsLoading(false);
-          console.error(
-            "Error fetching default images from Pexels API:",
-            error
-          );
-        });
-    } else {
-      axios
-        .get(apiUrl, {
-          params: {
-            query: search,
+            query: query,
           },
           headers: axiosConfig.headers,
         })
@@ -53,30 +34,21 @@ const ImageCard = ({ search }) => {
           console.error("Error fetching data from Pexels API:", error);
           setIsLoading(false);
         });
+    };
+
+    if (search === "") {
+      // Fetch default images
+      fetchImages("all");
+    } else {
+      // Fetch images based on the search query
+      fetchImages(search);
     }
 
     if (isGallery) {
-      axios
-        .get(apiUrl, {
-          params: {
-            query: "all",
-          },
-          headers: axiosConfig.headers,
-        })
-        .then((response) => {
-          const photos = response.data.photos;
-          setImages(photos);
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          console.error(
-            "Error fetching default images from Pexels API:",
-            error
-          );
-          setIsLoading(false);
-        });
+      // Fetch gallery images
+      fetchImages("all");
     }
-  }, [search]);
+  }, [search, isGallery]);
 
   const handleDragStart = (e, index) => {
     e.dataTransfer.setData("imageIndex", index);
@@ -95,6 +67,32 @@ const ImageCard = ({ search }) => {
     setImages(updatedImages);
   };
 
+  const handleTouchStart = (e, index) => {
+    e.preventDefault();
+    e.persist();
+    e.target.addEventListener(
+      "touchmove",
+      (touchMoveEvent) => handleTouchMove(touchMoveEvent, index),
+      {
+        passive: false,
+      }
+    );
+  };
+
+  const handleTouchMove = (e, index) => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    const target = document.elementFromPoint(touch.clientX, touch.clientY);
+    if (target && target.classList.contains("image-card")) {
+      handleDrop(e, index);
+    }
+  };
+
+  const handleTouchEnd = (e) => {
+    e.preventDefault();
+    e.target.removeEventListener("touchmove", handleTouchMove);
+  };
+
   return (
     <>
       {isLoading ? (
@@ -109,7 +107,9 @@ const ImageCard = ({ search }) => {
             <div
               key={image.id}
               draggable="true"
-              className="w-[200px] xs:w-auto sm:w-[200px] h-[300px] mx-auto md:w-[230px]"
+              onTouchStart={(e) => handleTouchStart(e, index)}
+              onTouchEnd={handleTouchEnd}
+              className="image-card w-[200px] xs:w-auto sm:w-[200px] h-[300px] mx-auto md:w-[230px]"
               onDragStart={(e) => handleDragStart(e, index)}
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, index)}
@@ -128,4 +128,5 @@ const ImageCard = ({ search }) => {
     </>
   );
 };
+
 export default ImageCard;
